@@ -23,6 +23,6 @@ setup(name='wsgi_ratelimit',
       entry_points="""
       # -*- Entry points: -*-
       [paste.filter_factory]
-      ratelimit = wsgi_ratelimit:ratelimit_middleware
+      main = wsgi_ratelimit:ratelimit_middleware
       """,
       )
