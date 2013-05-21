@@ -1,5 +1,4 @@
 from setuptools import setup, find_packages
-import sys, os
 
 version = '0.1'
 
@@ -8,7 +7,7 @@ setup(name='wsgi_ratelimit',
       description="Request rate limit over WSGI",
       long_description="""\
 """,
-      classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+      classifiers=[],  # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       keywords='wsgi',
       author='NORDUnet A/S',
       author_email='',
@@ -19,8 +18,11 @@ setup(name='wsgi_ratelimit',
       zip_safe=False,
       install_requires=[
           # -*- Extra requirements: -*-
+          "python-memcached"
       ],
       entry_points="""
       # -*- Entry points: -*-
+      [paste.filter_factory]
+      ratelimit = wsgi_ratelimit:ratelimit_middleware
       """,
       )
