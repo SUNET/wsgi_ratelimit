@@ -5,6 +5,20 @@ import memcache
 
 protected_paths_re = re.compile(r"^(POST|GET|PUT|UPDATE)(?: *)(.*)$")
 
+__all__ = [
+    "RateLimitMiddleware",
+    "ratelimit_middleware",
+    "is_ratelimit_reached",
+]
+
+WSGI_ENVIRON_PROPERTY = "RATELIMIT_REACHED"
+
+
+def is_ratelimit_reached(environ):
+    if isinstance(environ, dict):
+        return environ.get(WSGI_ENVIRON_PROPERTY, False)
+    return False
+
 
 class RateLimitMiddleware:
 
@@ -19,8 +33,9 @@ class RateLimitMiddleware:
         self.max_rate = max_rate
 
     def __call__(self, environ, start_response):
+
         if self.is_request_protected(environ) and self.new_request(environ):
-            environ["RATELIMIT_REACHED"] = True
+            environ[WSGI_ENVIRON_PROPERTY] = True
 
         return self.application(environ, start_response)
 
@@ -29,9 +44,10 @@ class RateLimitMiddleware:
         return request in self.protected_paths
 
     def generate_request_key(self, environ):
-        return "{0}_{1}_{2}".format(self.prefix,
-                                    environ.get("REQUEST_METHOD"),
-                                    environ.get("PATH_INFO"))
+        return "{0}_{1}_{2}_{3}".format(self.prefix,
+                                        environ.get("REQUEST_METHOD"),
+                                        environ.get("PATH_INFO"),
+                                        environ.get("REMOTE_ADDRESS"))
 
     def new_request(self, environ):
         key = self.generate_request_key(environ)
