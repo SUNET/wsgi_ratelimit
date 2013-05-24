@@ -14,6 +14,8 @@ requires = [
 ],
 
 testing_requires = [
+    'WebTest',
+    'mock'
 ]
 
 testing_extras = testing_requires + [

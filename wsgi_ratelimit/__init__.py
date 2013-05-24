@@ -9,6 +9,7 @@ __all__ = [
     "RateLimitMiddleware",
     "ratelimit_middleware",
     "is_ratelimit_reached",
+    "WSGI_ENVIRON_PROPERTY",
 ]
 
 WSGI_ENVIRON_PROPERTY = "RATELIMIT_REACHED"
@@ -82,7 +83,7 @@ def ratelimit_middleware(global_config, **settings):
 
     cache = memcache.Client(memcached_uri, debug=0)
 
-    def factory(app):
+    def factory(app, *args, **kwargs):
         return RateLimitMiddleware(app, cache, prefix, protected_paths,
                                    expire_time, max_rate)
 
