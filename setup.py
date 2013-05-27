@@ -3,12 +3,6 @@ from setuptools import setup, find_packages
 version = '0.1'
 
 
-def get_long_description():
-    readme = open('README.rst', 'r')
-    readme_text = readme.read()
-    readme.close()
-    return readme_text
-
 requires = [
     "python-memcached"
 ],
@@ -26,7 +20,13 @@ testing_extras = testing_requires + [
 setup(name='wsgi_ratelimit',
       version=version,
       description="Request rate limit over WSGI",
-      long_description=get_long_description(),
+      long_description="""
+wsgi_ratelimit is a wsgi middleware. It uses memcached to store the amount of
+access from the combination of remote_ip, path, http_method. If the counter is
+bigger than the allowed rate, then a wsgi environment variable is set,
+RATELIMIT_REACHED.  Then, the following app in the WSGI pipeline, like Pyramid
+or Repoze.bfg can use it to show a captcha or to return anything else.
+      """,
       classifiers=[],  # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       keywords='wsgi',
       author='NORDUnet A/S',
