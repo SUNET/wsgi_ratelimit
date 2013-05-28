@@ -85,7 +85,7 @@ class RateLimitMiddlewareAppTests(unittest.TestCase):
             self.testapp1 = TestApp(app, extra_environ={"REMOTE_ADDRESS": "10.0.0.1"})
             self.testapp2 = TestApp(app, extra_environ={"REMOTE_ADDRESS": "10.0.0.2"})
 
-    def request_test(self, func, path):
+    def _request_test(self, func, path):
         response = func(path)
         return response.body.startswith("True")
 
@@ -95,7 +95,7 @@ class RateLimitMiddlewareAppTests(unittest.TestCase):
                 func = self.testapp1.get
             else:
                 func = self.testapp1.post
-            self.assertFalse(self.request_test(func, query))
+            self.assertFalse(self._request_test(func, query))
 
     def test_filtered_ratelimit_request(self):
         for (method, query) in FakeMemcacheClient.paths_filtered:
@@ -103,10 +103,10 @@ class RateLimitMiddlewareAppTests(unittest.TestCase):
                 func = self.testapp1.get
             else:
                 func = self.testapp1.post
-            self.assertTrue(self.request_test(func, query))
+            self.assertTrue(self._request_test(func, query))
 
         for pet in range(1, 8):
             if pet <= 5:
-                self.assertFalse(self.request_test(self.testapp2.get, "/ok/"))
+                self.assertFalse(self._request_test(self.testapp2.get, "/ok/"))
             else:
-                self.assertTrue(self.request_test(self.testapp2.get, "/ok/"))
+                self.assertTrue(self._request_test(self.testapp2.get, "/ok/"))
