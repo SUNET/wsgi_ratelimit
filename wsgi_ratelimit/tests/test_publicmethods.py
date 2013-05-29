@@ -5,6 +5,10 @@ from wsgi_ratelimit import is_ratelimit_reached, WSGI_ENVIRON_PROPERTY
 
 class IsRatelimitReachedTests(unittest.TestCase):
 
+    def test_environ_is_not_ok(self):
+        environ = []
+        self.assertFalse(is_ratelimit_reached(environ))
+
     def test_is_ratelimit_reached(self):
         environ = {
             WSGI_ENVIRON_PROPERTY: True
