@@ -3,7 +3,7 @@ import re
 import memcache
 
 
-protected_paths_re = re.compile(r"^(POST|GET|PUT|UPDATE)(?: *)(.*)$")
+PROTECTED_PATHS_RE = re.compile(r"^(POST|GET|PUT|UPDATE)(?: *)(.*)$")
 
 __all__ = [
     "RateLimitMiddleware",
@@ -70,7 +70,7 @@ def ratelimit_middleware(global_config, **settings):
 
     protected_paths = []
     for line in protected_paths_set.split("\n"):
-        ppath = protected_paths_re.search(line)
+        ppath = PROTECTED_PATHS_RE.search(line)
         if ppath and ppath.groups():
             protected_paths.append(ppath.groups())
 
